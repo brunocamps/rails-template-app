@@ -12,6 +12,7 @@ class SiteLayoutTest < ActionDispatch::IntegrationTest
     # get contact_path
     # assert_select "title", full_title("Contact")
     # git template before controllers
-    
+    # done
+
   end
 end
