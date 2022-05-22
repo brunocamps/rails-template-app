@@ -8,5 +8,6 @@ class User < ApplicationRecord
     #validates presence: true, length: { minimum: 6 }
     has_secure_password
     validates :password, presence: true, length: {minimum: 6}
+    # ready to commit
 end
 
