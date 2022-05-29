@@ -9,3 +9,8 @@
 #   email: MyString
 
 # empty
+
+bruno:
+  name: Bruno Camps
+  email: bruno@accreditaire.com
+  password_digest: <%= User.digest('password') %>
