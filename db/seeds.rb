@@ -8,11 +8,6 @@
 
 # Create a main sample user
 
-User.create!(name: "Example User",
-             email: "example@accreditaire.com",
-             password: "foobar",
-             password_confirmation: "foobar")
-
 # Generate a bunch of additional users
 
 99.times do |n|
