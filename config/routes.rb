@@ -10,4 +10,6 @@ Rails.application.routes.draw do
   # get    '/edit',    to: 'users#edit'
   resources :users
   resources :account_activations, only: [:edit]
+  # resources: passwords reset?
+  resources :microposts, only: [:create, :destroy]
 end
