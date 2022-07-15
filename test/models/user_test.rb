@@ -1,23 +1,34 @@
-require "test_helper"
+require 'test_helper'
 
 class UserTest < ActiveSupport::TestCase
+
   def setup
     @user = User.new(name: "Example User", email: "user@example.com",
-      password: "foobar", password_confirmation: "foobar")
+                     password: "foobar", password_confirmation: "foobar")
   end
 
-  test "should be valid" do 
+  test "should be valid" do
     assert @user.valid?
   end
 
   test "name should be present" do
-    @user.name = "a" * 51
+    @user.name = ""
     assert_not @user.valid?
   end
 
   test "email should be present" do
+    @user.email = "     "
+    assert_not @user.valid?
+  end
+
+  test "name should not be too long" do
+    @user.name = "a" * 51
+    assert_not @user.valid?
+  end
+
+  test "email should not be too long" do
     @user.email = "a" * 244 + "@example.com"
-    assert_not @user.valid? 
+    assert_not @user.valid?
   end
 
   test "email validation should accept valid addresses" do
@@ -40,7 +51,6 @@ class UserTest < ActiveSupport::TestCase
 
   test "email addresses should be unique" do
     duplicate_user = @user.dup
-    #duplicate_user.email = @user.email.upcase
     @user.save
     assert_not duplicate_user.valid?
   end
@@ -56,7 +66,7 @@ class UserTest < ActiveSupport::TestCase
   end
 
   test "authenticated? should return false for a user with nil digest" do
-    assert_not @user.authenticated?(:remember,'')
+    assert_not @user.authenticated?(:remember, '')
   end
 
   test "associated microposts should be destroyed" do
@@ -68,39 +78,38 @@ class UserTest < ActiveSupport::TestCase
   end
 
   test "should follow and unfollow a user" do
-    bruno = users(:bruno)
+    michael = users(:michael)
     archer  = users(:archer)
-    assert_not bruno.following?(archer)
-    bruno.follow(archer)
-    assert bruno.following?(archer)
-    assert archer.followers.include?(bruno)
-    bruno.unfollow(archer)
-    assert_not bruno.following?(archer)
+    assert_not michael.following?(archer)
+    michael.follow(archer)
+    assert michael.following?(archer)
+    assert archer.followers.include?(michael)
+    michael.unfollow(archer)
+    assert_not michael.following?(archer)
     # Users can't follow themselves.
-    # bruno.follow(bruno)
-    # assert_not bruno.following?(bruno)
+    michael.follow(michael)
+    assert_not michael.following?(michael)
   end
 
-  # test "feed should have the right posts" do
-  #   bruno = users(:bruno)
-  #   archer  = users(:archer)
-  #   lana    = users(:lana)
-  #   # Posts from followed user
-  #   lana.microposts.each do |post_following|
-  #     assert bruno.feed.include?(post_following)
-  #   end
-  #   # Self-posts for user with followers
-  #   bruno.microposts.each do |post_self|
-  #     assert bruno.feed.include?(post_self)
-  #   end
-  #   # Self-posts for user with no followers
-  #   archer.microposts.each do |post_self|
-  #     assert archer.feed.include?(post_self)
-  #   end
-  #   # Posts from unfollowed user
-  #   archer.microposts.each do |post_unfollowed|
-  #     assert_not bruno.feed.include?(post_unfollowed)
-  #   end
-  # end
+  test "feed should have the right posts" do
+    michael = users(:michael)
+    archer  = users(:archer)
+    lana    = users(:lana)
+    # Posts from followed user
+    lana.microposts.each do |post_following|
+      assert michael.feed.include?(post_following)
+    end
+    # Self-posts for user with followers
+    michael.microposts.each do |post_self|
+      assert michael.feed.include?(post_self)
+    end
+    # Self-posts for user with no followers
+    archer.microposts.each do |post_self|
+      assert archer.feed.include?(post_self)
+    end
+    # Posts from unfollowed user
+    archer.microposts.each do |post_unfollowed|
+      assert_not michael.feed.include?(post_unfollowed)
+    end
+  end
 end
-
